@@ -122,7 +122,7 @@ describe('Zod (Advanced Exercises)', () => {
     return !['takenUser', 'anotherTakenUser'].includes(username);
   }
 
-  describe.todo('Challenge 3: Asynchronous Validation', () => {
+  describe('Challenge 3: Asynchronous Validation', () => {
     it('resolves with a valid (available) username', async () => {
       await expect(asyncUsernameSchema.parseAsync('newUser123')).resolves.toBe(
         'newUser123',
@@ -143,11 +143,16 @@ describe('Zod (Advanced Exercises)', () => {
    * Create either a global or schema-level error map to produce friendlier messages.
    * For instance, you might set up a map that modifies the "invalid_type" message.
    */
-  const myFriendlySchema = '🥸 IMPLEMENT ME!' as any;
+  const myFriendlySchema =  z.string({
+    errorMap:(issue, ctx) => {
+      return {message: 'Expected a friendly message'}
+    }
+    
+  })
   // Could be a string schema or something else,
   // but with an errorMap that changes the default messages.
 
-  describe.todo('Challenge 4: Custom Error Maps', () => {
+  describe('Challenge 4: Custom Error Maps', () => {
     it('fails with a custom error message for invalid type', () => {
       // Expect that myFriendlySchema.parse(...) throws your custom error string
       expect(() => myFriendlySchema.parse(123)).toThrowError(
@@ -163,8 +168,7 @@ describe('Zod (Advanced Exercises)', () => {
    * For example, you might want to parse numeric strings into numbers automatically
    * or parse date strings into JS Date objects, then apply further constraints.
    */
-  const coercedNumberSchema = '🥸 IMPLEMENT ME!' as any;
-  // e.g., z.coerce.number().min(100)
+  const coercedNumberSchema = z.coerce.number()  // e.g., z.coerce.number().min(100)
 
   describe.todo('Challenge 5: Coercion', () => {
     it('coerces a numeric string to a number and validates it', () => {
