@@ -52,7 +52,32 @@ describe('Zod (Advanced Exercises)', () => {
    *    '{ "type": "json", "data": { "value": 42 } }' -> an object
    *    'prefix-something' -> a string that starts with 'prefix-'
    */
-  const complexDataSchema = '🥸 IMPLEMENT ME!' as any;
+  const complexDataSchema = z.preprocess(
+    (input: unknown) => {
+      if (
+        typeof input === 'string' &&
+        input.startsWith('{') &&
+        input.endsWith('}')
+      ) {
+        try {
+          return JSON.parse(input);
+        } catch {
+          return input; // If parsing fails, keep it as the original string
+        }
+      }
+      return input;
+    },
+    z.union([
+      z.object({
+        type: z.literal('json'),
+        data: z.object({ value: z.number() }),
+      }),
+      // "prefix-" string
+      z.string().startsWith('prefix-'),
+    ]),
+  );
+
+  descr
 
   describe.todo('Challenge 2: Preprocessing', () => {
     it('accepts a valid JSON string and parses it into the correct shape', () => {
