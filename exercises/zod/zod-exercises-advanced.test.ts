@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
 
-describe.todo('Zod (Advanced Exercises)', () => {
+describe('Zod (Advanced Exercises)', () => {
   /**
    * CHALLENGE 1:
    * Lazy Recursion with z.lazy()
@@ -15,9 +15,14 @@ describe.todo('Zod (Advanced Exercises)', () => {
    *
    * Use z.lazy() to reference the schema inside itself.
    */
-  const categorySchema = '🥸 IMPLEMENT ME!' as any; // e.g., z.lazy(() => z.object({...}))
+  const categorySchema = z.lazy<Category>(()=>{
+    return z.object({
+      name: z.string(),
+      subcategories: z.array(categorySchema).optional(),
+    })
+  }) // e.g., z.lazy(() => z.object({...}))
 
-  describe('Challenge 1: Recursive Data Structures', () => {
+  describe.todo('Challenge 1: Recursive Data Structures', () => {
     it('parses a valid recursive structure', () => {
       const validCategory = {
         name: 'Electronics',
@@ -49,7 +54,7 @@ describe.todo('Zod (Advanced Exercises)', () => {
    */
   const complexDataSchema = '🥸 IMPLEMENT ME!' as any;
 
-  describe('Challenge 2: Preprocessing', () => {
+  describe.todo('Challenge 2: Preprocessing', () => {
     it('accepts a valid JSON string and parses it into the correct shape', () => {
       const input = '{ "type": "json", "data": { "value": 42 } }';
       // Should parse to an object with { type: 'json', data: { value: 42 } }
@@ -80,7 +85,7 @@ describe.todo('Zod (Advanced Exercises)', () => {
   //   return !['takenUser', 'anotherTakenUser'].includes(username);
   // }
 
-  describe('Challenge 3: Asynchronous Validation', () => {
+  describe.todo('Challenge 3: Asynchronous Validation', () => {
     it('resolves with a valid (available) username', async () => {
       await expect(asyncUsernameSchema.parseAsync('newUser123')).resolves.toBe(
         'newUser123',
@@ -105,7 +110,7 @@ describe.todo('Zod (Advanced Exercises)', () => {
   // Could be a string schema or something else,
   // but with an errorMap that changes the default messages.
 
-  describe('Challenge 4: Custom Error Maps', () => {
+  describe.todo('Challenge 4: Custom Error Maps', () => {
     it('fails with a custom error message for invalid type', () => {
       // Expect that myFriendlySchema.parse(...) throws your custom error string
       expect(() => myFriendlySchema.parse(123)).toThrowError(
@@ -124,7 +129,7 @@ describe.todo('Zod (Advanced Exercises)', () => {
   const coercedNumberSchema = '🥸 IMPLEMENT ME!' as any;
   // e.g., z.coerce.number().min(100)
 
-  describe('Challenge 5: Coercion', () => {
+  describe.todo('Challenge 5: Coercion', () => {
     it('coerces a numeric string to a number and validates it', () => {
       expect(() => coercedNumberSchema.parse('150')).not.toThrow();
       expect(() => coercedNumberSchema.parse('50')).toThrowError();
