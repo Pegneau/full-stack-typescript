@@ -77,9 +77,8 @@ describe('Zod (Advanced Exercises)', () => {
     ]),
   );
 
-  descr
 
-  describe.todo('Challenge 2: Preprocessing', () => {
+  describe('Challenge 2: Preprocessing', () => {
     it('accepts a valid JSON string and parses it into the correct shape', () => {
       const input = '{ "type": "json", "data": { "value": 42 } }';
       // Should parse to an object with { type: 'json', data: { value: 42 } }
@@ -104,11 +103,24 @@ describe('Zod (Advanced Exercises)', () => {
    * The markdown shows an async refine scenario, such as checking
    * a username against a list of "taken" usernames in a database.
    */
-  const asyncUsernameSchema = '🥸 IMPLEMENT ME!' as any;
+  const asyncUsernameSchema = z.string().refine(
+    async (val) => {
+      // If the username is available, refine passes (returns true)
+      // If not available, refine fails (returns false)
+      return await checkUsernameAvailability(val);
+    },
+    { message: 'Username is taken' },
+  );
+     
+    
+
+
+
+
   // You might create a mock function to simulate an async check, e.g.:
-  // async function checkUsernameAvailability(username: string): Promise<boolean> {
-  //   return !['takenUser', 'anotherTakenUser'].includes(username);
-  // }
+  async function checkUsernameAvailability(username: string): Promise<boolean> {
+    return !['takenUser', 'anotherTakenUser'].includes(username);
+  }
 
   describe.todo('Challenge 3: Asynchronous Validation', () => {
     it('resolves with a valid (available) username', async () => {
