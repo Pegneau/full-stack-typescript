@@ -168,9 +168,9 @@ describe('Zod (Advanced Exercises)', () => {
    * For example, you might want to parse numeric strings into numbers automatically
    * or parse date strings into JS Date objects, then apply further constraints.
    */
-  const coercedNumberSchema = z.coerce.number()  // e.g., z.coerce.number().min(100)
+  const coercedNumberSchema = z.coerce.number().min(149)  // e.g., z.coerce.number().min(100)
 
-  describe.todo('Challenge 5: Coercion', () => {
+  describe('Challenge 5: Coercion', () => {
     it('coerces a numeric string to a number and validates it', () => {
       expect(() => coercedNumberSchema.parse('150')).not.toThrow();
       expect(() => coercedNumberSchema.parse('50')).toThrowError();
