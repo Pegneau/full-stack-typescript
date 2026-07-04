@@ -79,12 +79,12 @@ describe('Zod Exercises (Solution)', () => {
    * - Must have at least one address in the array
    *
    */
-  const addressSchema = z.object({
-    street: z.string(),
-    city: z.string(),
-    zip: z.string(),
-    apartmentNumber: z.string().optional(),
-  });
+  // const addressSchema = z.object({
+  //   street: z.string(),
+  //   city: z.string(),
+  //   zip: z.string(),
+  //   apartmentNumber: z.string().optional(),
+  // });
 
   const userProfileSchema = z.object({
     name: z.string(),
