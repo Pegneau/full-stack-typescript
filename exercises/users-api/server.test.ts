@@ -30,8 +30,8 @@ describe('User API Routes', () => {
         .send({ email: testUser.email })
         .expect(400);
 
-      // expect(response.body).toHaveProperty('message');
-      // expect(response.body.message).toBe('Name and email are required');
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('Name and email are required');
     });
 
     it('should return 400 if email is missing', async () => {
