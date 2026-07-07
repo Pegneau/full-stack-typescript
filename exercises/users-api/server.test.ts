@@ -24,15 +24,15 @@ describe('User API Routes', () => {
       expect(response.body.email).toBe(testUser.email);
     });
 
-    // it('should return 400 if name is missing', async () => {
-    //   const response = await request(app)
-    //     .post('/users')
-    //     .send({ email: testUser.email })
-    //     .expect(400);
+    it('should return 400 if name is missing', async () => {
+      const response = await request(app)
+        .post('/users')
+        .send({ email: testUser.email })
+        .expect(400);
 
-    //   expect(response.body).toHaveProperty('message');
-    //   expect(response.body.message).toBe('Name and email are required');
-    // });
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('Name and email are required');
+    });
 
     it('should return 400 if email is missing', async () => {
       const response = await request(app).post('/users').send({ name: testUser.name }).expect(400);
