@@ -18,6 +18,7 @@
   "author": "Steve Kinney <hello@stevekinney.net> (https://stevekinney.net/courses/full-stack-typescript)",
   "license": "MIT",
   "dependencies": {
+    "@tailwindcss/oxide-win32-x64-msvc": "^4.0.13",
     "@tailwindcss/vite": "^4.0.13",
     "busy-bee-schema": "*",
     "chalk": "^5.4.1",
@@ -25,6 +26,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
+    "lightningcss-win32-x64-msvc": "^1.29.2",
     "openapi-fetch": "^0.13.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

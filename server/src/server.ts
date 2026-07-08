@@ -18,6 +18,8 @@ export async function createServer(database: Database) {
   );
 
   app.get('/tasks', async (req, res) => {
+    const body = req.body;
+
     const { completed } = req.query;
     const query = completed === 'true' ? completedTasks : incompleteTasks;
 
@@ -65,7 +67,7 @@ export async function createServer(database: Database) {
       const task = { ...previous, ...updates };
 
       await updateTask.run([task.title, task.description, task.completed, id]);
-      return res.status(200).json({message: 'Task updated successfully'});
+      return res.status(200).json({ message: 'Task updated successfully' });
     } catch (error) {
       return handleError(req, res, error);
     }
