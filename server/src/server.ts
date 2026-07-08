@@ -2,13 +2,30 @@ import cors from 'cors';
 import express from 'express';
 import type { Database } from 'sqlite';
 import { handleError } from './handle-error.js';
+import { Request, Response } from 'express';
+import { z } from 'zod';
+
+export const TaskSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  description: z.string().optional(),
+  completed: z
+    .union([z.number(), z.boolean()])
+    .transform((v) => Boolean(v))
+    .optional(),
+});
+
+export const CreateTaskSchema = TaskSchema.omit({ id: true });
+export const UpdateTaskSchema = TaskSchema.partial().omit({ id: true });
+
+export const TaskListSchema = z.array(TaskSchema);
 
 export async function createServer(database: Database) {
   const app = express();
   app.use(cors());
   app.use(express.json());
 
-  const incompleteTasks = await database.prepare('SELECT * FROM tasks whERE completed = 0');
+  const incompleteTasks = await database.prepare('SELECT * FROM tasks WHERE completed = 0');
   const completedTasks = await database.prepare('SELECT * FROM tasks WHERE completed = 1');
   const getTask = await database.prepare('SELECT * FROM tasks WHERE id = ?');
   const createTask = await database.prepare('INSERT INTO tasks (title, description) VALUES (?, ?)');
@@ -17,9 +34,7 @@ export async function createServer(database: Database) {
     `UPDATE tasks SET title = ?, description = ?, completed = ? WHERE id = ?`,
   );
 
-  app.get('/tasks', async (req, res) => {
-    const body = req.body;
-
+  app.get('/tasks', async (req: Request, res: Response) => {
     const { completed } = req.query;
     const query = completed === 'true' ? completedTasks : incompleteTasks;
 
@@ -47,7 +62,7 @@ export async function createServer(database: Database) {
 
   app.post('/tasks', async (req, res) => {
     try {
-      const task = req.body;
+      const task = CreateTaskSchema.parse(req.body);
       if (!task.title) return res.status(400).json({ message: 'Title is required' });
 
       await createTask.run([task.title, task.description]);
@@ -60,10 +75,13 @@ export async function createServer(database: Database) {
   // Update a task
   app.put('/tasks/:id', async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = z.object({ id: z.coerce.number() }).parse(req.params);
 
-      const previous = await getTask.get([id]);
-      const updates = req.body;
+      const previousData = await getTask.get([id]);
+      if (!previousData) return res.status(404).json({ message: 'Task not found' });
+
+      const previous = TaskSchema.parse(previousData);
+      const updates = UpdateTaskSchema.parse(req.body);
       const task = { ...previous, ...updates };
 
       await updateTask.run([task.title, task.description, task.completed, id]);

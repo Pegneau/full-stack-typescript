@@ -1,4 +1,5 @@
 import { PartialTask, Task } from './types';
+import { z } from 'zod';
 
 const API_URL = 'http://localhost:4001';
 
