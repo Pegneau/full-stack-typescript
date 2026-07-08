@@ -3,11 +3,21 @@ import express from 'express';
 import getPort from 'get-port';
 import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
+import { z } from 'zod';
 
 export const app = express();
 const port = await getPort({ port: 3000 });
 
 app.use(bodyParser.json());
+
+const UserSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email address'),
+}) satisfies z.ZodType<User>;
+
+const CreateUserSchema = UserSchema.omit({ id: true });
+const PartialUserSchema = UserSchema.partial().omit({ id: true });
 
 interface User {
   id: string;
@@ -19,13 +29,13 @@ const users: User[] = [];
 
 // Create a new user
 app.post('/users', (req, res) => {
-  const { name, email } = req.body;
+  const { name, email } = CreateUserSchema.parse(req.body);
 
   if (!name || !email) {
     return res.status(400).json({ message: 'Name and email are required' });
   }
 
-  const newUser: User = { id: uuidv4(), name, email };
+  const newUser = UserSchema.parse({ id: uuidv4(), name, email });
 
   users.push(newUser);
 
@@ -34,7 +44,7 @@ app.post('/users', (req, res) => {
 
 // Read all users
 app.get('/users', (req, res) => {
-  const { name, email } = req.query;
+  const { name, email } = PartialUserSchema.parse(req.query);
 
   let filteredUsers = users;
 
@@ -76,7 +86,7 @@ app.put('/users/:id', (req, res) => {
     return res.status(404).json({ message: 'User not found' });
   }
 
-  const { name, email } = req.body;
+  const { name, email } = PartialUserSchema.parse(req.body);
 
   if (name) user.name = name;
   if (email) user.email = email;
