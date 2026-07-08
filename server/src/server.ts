@@ -4,21 +4,7 @@ import type { Database } from 'sqlite';
 import { handleError } from './handle-error.js';
 import { Request, Response } from 'express';
 import { z } from 'zod';
-
-export const TaskSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  description: z.string().optional(),
-  completed: z
-    .union([z.number(), z.boolean()])
-    .transform((v) => Boolean(v))
-    .optional(),
-});
-
-export const CreateTaskSchema = TaskSchema.omit({ id: true });
-export const UpdateTaskSchema = TaskSchema.partial().omit({ id: true });
-
-export const TaskListSchema = z.array(TaskSchema);
+import { CreateTaskSchema, TaskSchema, UpdateTaskSchema } from 'busy-bee-schema';
 
 export async function createServer(database: Database) {
   const app = express();
@@ -51,7 +37,6 @@ export async function createServer(database: Database) {
     try {
       const { id } = req.params;
       const task = await getTask.get([id]);
-
       if (!task) return res.status(404).json({ message: 'Task not found' });
 
       return res.json(task);

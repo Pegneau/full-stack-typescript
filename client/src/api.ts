@@ -1,22 +1,9 @@
+// import { TaskListSchema, Task } from '../shared/schemas';
 import { PartialTask, Task } from './types';
-import { z } from 'zod';
-
-export const TaskSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  description: z.string().optional(),
-  completed: z
-    .union([z.number(), z.boolean()])
-    .transform((v) => Boolean(v))
-    .optional(),
-});
-
-export const CreateTaskSchema = TaskSchema.omit({ id: true });
-export const UpdateTaskSchema = TaskSchema.partial().omit({ id: true });
-
-export const TaskListSchema = z.array(TaskSchema);
 
 const API_URL = 'http://localhost:4001';
+
+import { TaskListSchema } from 'busy-bee-schema';
 
 export const fetchTasks = async (showCompleted: boolean) => {
   const url = new URL(`/tasks`, API_URL);
